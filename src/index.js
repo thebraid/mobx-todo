@@ -6,66 +6,37 @@ import { decorate, observable, action } from "mobx"
 import { observer } from 'mobx-react';
 
 const appState = observable({
-    @observable firstName: "firstname",
-    @observable lastName: "lastName",
-    get getFullName() {
-        return `${appState.firstName} ${appState.lastName}`
+    count: 0,
+
+    increment() {
+        this.count++;
     },
 
-    changeFirstName: action( ()=> {
-        appState.firstName = 'TESTSETSET'
-    }),
-
-    autorun: () => {
-        console.log('START autorun');
-        console.log(appState.firstName);
-        console.log('END autorun');
-        console.log(' ');
-
-    }
+    descrement() {
+        this.count--;
+    },
 });
 
-// appState.increment = () => {
-//     this.count++;
-// };
-// appState.decrement = () => {
-//     this.count--;
-// };
-//
+@observer class App extends Component {
 
-@observer
-class App extends Component {
-    // constructor() {
-    //     super();
-    //     this.state = {
-    //         count: 0
-    //     }
-    // }
+    handleInc = () => {
+        this.props.appState.increment();
+    };
+
+    handleDec = () => {
+        this.props.appState.descrement();
+    };
 
     render() {
         const { appState } = this.props;
-        appState.autorun();
         return (
             <div>
-                Counter: test<br/>
-                {appState.getFullName}
-                <button onClick={appState.changeFirstName}>+</button>
-                {/*<button onClick={this.handleDec}>-</button>*/}
+                Counter: {appState.count}<br/>
+                <button onClick={this.handleInc}>+</button>
+                <button onClick={this.handleDec}>-</button>
             </div>
         )
     }
-
-    // incrementCount = () => {
-    //     const { appState } = this.props;
-    //     // console.log(appState)
-    //     appState.inCount();
-    // };
-    //
-    // handleDec = () => {
-    //     // this.state.count--;
-    //
-    // }
-
 }
 
 ReactDOM.render(<App appState={appState}/>, document.getElementById("app"));
