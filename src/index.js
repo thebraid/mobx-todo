@@ -1,42 +1,46 @@
 import React, { Component } from 'react';
-
 import ReactDOM from 'react-dom';
 
-import { decorate, observable, action } from "mobx"
+import { decorate, observable, action, computed } from "mobx"
 import { observer } from 'mobx-react';
+import DevTools from 'mobx-react-devtools';
 
-const appState = observable({
-    count: 0,
+const t = new class Temperature {
+    @observable unit = "c";
+    @observable temperatureCelsius = 25;
 
-    increment() {
-        this.count++;
-    },
-
-    descrement() {
-        this.count--;
-    },
-});
-
-@observer class App extends Component {
-
-    handleInc = () => {
-        this.props.appState.increment();
-    };
-
-    handleDec = () => {
-        this.props.appState.descrement();
-    };
-
-    render() {
-        const { appState } = this.props;
-        return (
-            <div>
-                Counter: {appState.count}<br/>
-                <button onClick={this.handleInc}>+</button>
-                <button onClick={this.handleDec}>-</button>
-            </div>
-        )
+    @computed get temperatureKelvin() {
+        console.log('calculating Kelvin');
+        return this.temperatureCelsius * (9 / 5) + 32;
     }
-}
 
-ReactDOM.render(<App appState={appState}/>, document.getElementById("app"));
+    @computed get temperatureFahrenheit() {
+        console.log('calculating Fahrenheit');
+        return this.temperatureCelsius + 273.15;
+    }
+
+    @computed get temperature() {
+        console.log('calculating temperature');
+        console.log(this.unit); // undefined !!!
+        console.log(this.temperatureCelsius); // undefined !!!
+
+        switch (this.unit) {
+            case "K":
+                return this.temperatureKelvin + 'K';
+            case "F":
+                return this.temperatureFahrenheit + 'F';
+            case "C":
+                return this.temperatureCelsius + 'C';
+        }
+    }
+};
+
+const App = observer(({ temperature }) => (
+    <div>
+        {temperature.temperature}
+        <DevTools/>
+    </div>
+));
+
+ReactDOM.render(<App temperature={t}/>, document.getElementById("app"));
+
