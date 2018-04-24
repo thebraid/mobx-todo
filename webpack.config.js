@@ -1,26 +1,25 @@
-var webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
-    // entry: './frontend/js/index.js',
-    // output: {
-    //     path: path.resolve(__dirname, 'public'),
-    //     filename: 'js/index.js'
-    // },
-
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /(node_modules)/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: ['@babel/preset-env']
-                        }
-                    }
-                ]
-            },
-        ]
-    },
+  entry: './src/index.js',
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  stats: 'errors-only', /* возможно, стоит выводить предупреждения? */
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: [
+          // 'cache-loader',
+          'babel-loader',
+        ],
+        include: path.resolve('src'),
+      }
+    ]
+  }
 };

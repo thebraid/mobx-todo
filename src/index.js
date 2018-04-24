@@ -5,8 +5,8 @@ import { decorate, observable, action, computed } from "mobx"
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
-const t = new class Temperature {
-    @observable unit = "c";
+window.t = new class Temperature {
+    @observable unit = "C";
     @observable temperatureCelsius = 25;
 
     @computed get temperatureKelvin() {
@@ -20,10 +20,6 @@ const t = new class Temperature {
     }
 
     @computed get temperature() {
-        console.log('calculating temperature');
-        console.log(this.unit); // undefined !!!
-        console.log(this.temperatureCelsius); // undefined !!!
-
         switch (this.unit) {
             case "K":
                 return this.temperatureKelvin + 'K';
@@ -35,12 +31,14 @@ const t = new class Temperature {
     }
 };
 
-const App = observer(({ temperature }) => (
-    <div>
-        {temperature.temperature}
-        <DevTools/>
-    </div>
-));
+const App = observer(({ temperature }) => {
+    return (
+        <div>
+            temperature = {temperature.temperature}
+            <DevTools/>
+        </div>
+    )
+});
 
 ReactDOM.render(<App temperature={t}/>, document.getElementById("app"));
 
