@@ -12,9 +12,6 @@ const Store = types
         },
         remove(item) {
             destroy(item);
-            // console.log(getParent(self))
-            // getParent(self, 1).remove(self);
-
         }
     }));
 
